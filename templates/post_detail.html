@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+
+    body { background: #0f1115; color: #d8d8e0; }
+
+    .detail-container {
+        min-height: calc(100vh - 100px);
+        padding: 50px 20px;
+    }
+
+    .detail-card {
+        background: #181b20;
+        max-width: 780px;
+        margin: 0 auto;
+        border-radius: 20px;
+        padding: 40px 30px;
+        border-left: 6px solid #5fbf74; /* зелена смуга */
+        box-shadow: 0 12px 28px rgba(0,0,0,0.5);
+        animation: fadeIn 0.6s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(25px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .detail-header { text-align: center; margin-bottom: 35px; }
+
+    .measurement-id {
+        display: inline-block;
+        background: #5fbf74;
+        color: #0f1115;
+        padding: 6px 20px;
+        border-radius: 50px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 15px;
+        box-shadow: 0 5px 14px rgba(95,191,116,0.2);
+    }
+
+    .detail-header h2 {
+        font-size: 32px;
+        font-weight: 700;
+        color: #b99fdc; /* лавандовий */
+        margin-bottom: 8px;
+    }
+
+    .measurement-date {
+        font-size: 15px;
+        color: #95a5a6;
+        margin-top: 8px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .info-card {
+        background: #1d1f25;
+        border-radius: 16px;
+        padding: 25px 20px;
+        border-left: 4px solid #5fbf74;
+        transition: all 0.35s;
+    }
+    .info-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 22px rgba(0,0,0,0.5);
+    }
+
+    .info-card h3 {
+        font-size: 17px;
+        font-weight: 600;
+        color: #d8d8e0;
+        margin-bottom: 16px;
+    }
+
+    .description-text {
+        background: #23262d;
+        padding: 18px;
+        border-radius: 12px;
+        line-height: 1.6;
+        color: #b5b5be;
+        border: 1px solid #2c2f36;
+    }
+
+    .weather-metrics {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        gap: 18px;
+    }
+
+    .metric {
+        text-align: center;
+        padding: 20px 14px;
+        background: #181b20;
+        border-radius: 14px;
+        box-shadow: 0 3px 12px rgba(0,0,0,0.3);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .metric:hover { transform: translateY(-3px); box-shadow: 0 8px 18px rgba(0,0,0,0.5); }
+
+    .metric-label { font-size: 13px; color: #9aa0a6; margin-bottom: 8px; font-weight: 500; }
+    .metric-value { font-size: 20px; font-weight: 700; color: #d8d8e0; }
+
+    .metric.temperature { border-left: 3px solid #5fbf74; } /* зелений */
+    .metric.pressure { border-left: 3px solid #7f8c8d; } /* сірий */
+    .metric.wind { border-left: 3px solid #b99fdc; } /* лавандовий */
+    .metric.precipitation { border-left: 3px solid #2ecc71; }
+
+    .actions {
+        display: flex;
+        gap: 14px;
+        margin-top: 35px;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .action-btn {
+        padding: 14px 30px;
+        border-radius: 14px;
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: none;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+        min-width: 170px;
+        box-shadow: 0 4px 14px rgba(0,0,0,0.5);
+        color: #fff;
+    }
+
+    .action-btn.home { background: #3498db; }
+    .action-btn.edit { background: #5fbf74; }
+    .action-btn.delete { background: #e74c3c; }
+
+    .action-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 18px rgba(0,0,0,0.5); }
+
+    @media (max-width: 768px) {
+        .info-grid { grid-template-columns: 1fr; }
+        .weather-metrics { grid-template-columns: repeat(2, 1fr); }
+        .action-btn { width: 100%; justify-content: center; }
+    }
+
+    @media (max-width: 480px) {
+        .weather-metrics { grid-template-columns: 1fr; }
+        .detail-card { padding: 30px 20px; }
+        .detail-header h2 { font-size: 26px; }
+    }
+</style>
+
+<div class="detail-container">
+    <div class="detail-card">
+        <div class="detail-header">
+            <div class="measurement-id">ВИМІРЮВАННЯ #{{ post.id }}</div>
+            <h2>Деталі вимірювання</h2>
+            <div class="measurement-date">{{ post.data }}</div>
+        </div>
+
+        <div class="info-grid">
+            <div class="info-card description">
+                <h3>Опис погоди</h3>
+                <div class="description-text">{{ post.text }}</div>
+            </div>
+
+            <div class="info-card weather">
+                <h3>Метеорологічні дані</h3>
+                <div class="weather-metrics">
+                    <div class="metric temperature">
+                        <div class="metric-label">Температура</div>
+                        <div class="metric-value">{{ post.temperature }}°C</div>
+                    </div>
+                    <div class="metric pressure">
+                        <div class="metric-label">Атмосферний тиск</div>
+                        <div class="metric-value">{{ post.pressure }} hPa</div>
+                    </div>
+                    <div class="metric wind">
+                        <div class="metric-label">Швидкість вітру</div>
+                        <div class="metric-value">{{ post.wind_speed }} м/с</div>
+                    </div>
+                    <div class="metric precipitation">
+                        <div class="metric-label">Ймовірність опадів</div>
+                        <div class="metric-value">{{ post.precipitation_probability }}%</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="actions">
+            <a href="{% url 'home' %}" class="action-btn home">На головну</a>
+            <a href="{% url 'post_edit' post.pk %}" class="action-btn edit">Редагувати</a>
+            <a href="{% url 'post_delete' post.pk %}" class="action-btn delete">Видалити</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

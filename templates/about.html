@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Про проект</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            max-width: 800px;
+            margin: 0 auto;
+            background: #0d1b1e; /* нічний зелено-синій */
+            color: #e6e6e6;
+        }
+
+        .container {
+            background: #162527; /* темний зелено-сірий */
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 20px rgba(150, 120, 190, 0.25); /* лавандова тінь */
+            border: 1px solid rgba(200, 160, 255, 0.2);
+        }
+
+        h1 {
+            color: #c8a8ff; /* бузково-лавандовий */
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        p, li {
+            color: #d7dee0;
+            font-size: 17px;
+            line-height: 1.6;
+        }
+
+        ul {
+            margin-top: 10px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #c8a8ff; /* лаванда */
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.25s;
+        }
+
+        .back-link:hover {
+            color: #9f7de8; /* темніша лаванда */
+            text-decoration: underline;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Про проект</h1>
+        <p>Ця система призначена для моніторингу та аналізу атмосферних вимірювань.</p>
+        <p><strong>Функціональність:</strong></p>
+        <ul>
+            <li>Запис температури, тиску, швидкості вітру</li>
+            <li>Відстеження ймовірності опадів</li>
+            <li>Перегляд історії вимірювань</li>
+            <li>Експорт даних</li>
+        </ul>
+        <a href="{% url 'home' %}" class="back-link">← На головну</a>
+    </div>
+</body>
+</html>

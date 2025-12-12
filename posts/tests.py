@@ -1,0 +1,58 @@
+from django.test import TestCase
+from django.test import SimpleTestCase
+from django.urls import reverse
+from .models import Post
+
+
+# Create your tests here.
+class HomepageTests(TestCase):
+    '''Тестуємо початкову сторінку додатку'''
+
+    def test_url_exists_at_correct_location(self):
+        response = self.client.get("/") # отримання відповіді від серверу
+        self.assertEqual(response.status_code, 200)
+
+    def test_url_available_by_name(self):
+        response = self.client.get(reverse("home")) # звернення до сторінки за її псевдонімом
+        self.assertEqual(response.status_code, 200)
+
+    def test_template_name_correct(self):
+        response = self.client.get(reverse("home"))
+        self.assertTemplateUsed(response, "home.html") # тестуємо наявність шаблону сторінки
+
+
+class AboutpageTest(TestCase):
+    '''Тестуємо сторінку about'''
+
+    def test_url_exists_at_correct_location(self):
+        response = self.client.get("/about/") # отримання відповіді від серверу
+        self.assertEqual(response.status_code, 200)
+
+    def test_url_available_by_name(self):
+        response = self.client.get(reverse("about")) # звернення до сторінки за її псевдонімом
+        self.assertEqual(response.status_code, 200)
+
+    def test_template_name_correct(self):
+        response = self.client.get(reverse("about"))
+        self.assertTemplateUsed(response, "about.html") # тестуємо наявність шаблону сторінки
+
+    def test_template_content(self):
+        response = self.client.get(reverse("about"))
+        self.assertContains(response, "<h1>Про проект</h1>") # перевіряємо наявність заголовку на сторінці
+
+class PostTest(TestCase):
+    def setUp(self):
+        post = Post.objects.create(
+            text="Тестова погода",
+            temperature=15.5,
+            pressure=760,
+            wind_speed=3.2,
+            precipitation_probability=30
+        )
+        self.assertEqual(Post.objects.count(), 1)
+        self.assertEqual(post.text, "Тестова погода")
+
+    def test_home_has_table(self):
+        response = self.client.get('/')
+        self.assertContains(response, "Дошка атмосферних вимірювань")
+        self.assertContains(response, "Дата")
